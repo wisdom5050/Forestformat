@@ -1,0 +1,92 @@
+import os
+import pandas as pd
+
+
+class main():
+
+    os.chdir("E:\History\Forex\D1")
+    
+    all_files_list = []
+    for files in os.listdir("E:\History\Forex\D1"):
+        all_files_list.append(files)
+        
+    print(all_files_list)
+    
+    print(all_files_list[121])
+    
+    data1 = pd.read_csv(all_files_list[121])
+    time_col = data1['Time (UTC)'].values
+    final = []
+    for a in time_col:
+        b = []
+        
+        for i in a[6:10:1]:
+            b.append(i)
+            str1 = ""
+            year = str1.join(b)
+        b = []   
+        for j in a[0:2:1]:
+            b.append(j)
+            str1 = ""
+            day = str1.join(b)
+        b = []
+        for k in a[3: 5: 1]:
+            b.append(k)
+            str1 = ""
+            month = str1.join(b)
+        
+        b = []
+        for l in a[12:17:1]:
+            b.append(l)
+            str1 = ""
+            time = str1.join(b)
+        
+    final.append(year + month + day + " " + time)
+    data1 = data1.drop(['Time (UTC)'], axis = 1)
+    data1.insert(0,"Time",final,True)
+    
+    data2 = pd.read_csv(all_files_list[121])
+    time_col = data2['Time (UTC)'].values
+    final = []
+    for a in time_col:
+        b = []
+        
+        for i in a[6:10:1]:
+            b.append(i)
+            str1 = ""
+            year = str1.join(b)
+        b = []   
+        for j in a[0:2:1]:
+            b.append(j)
+            str1 = ""
+            day = str1.join(b)
+        b = []
+        for k in a[3: 5: 1]:
+            b.append(k)
+            str1 = ""
+            month = str1.join(b)
+        
+        b = []
+        for l in a[12:17:1]:
+            b.append(l)
+            str1 = ""
+            time = str1.join(b)
+        
+    final.append(year + month + day + " " + time)
+    data2 = data2.drop(['Time (UTC)'], axis = 1)
+    data2.insert(0,"Time",final,True)
+    
+    combined_data = pd.concat([data1, data2], axis = 1)
+    
+    
+    filer = all_files_list[125].partition('_')
+    filer = filer[0]
+    
+    writer = pd.ExcelWriter('D/{}'.format(filer), engine='xlsxwriter')
+    writer.save()
+    
+    combined_data.to_excel('D/{}.xlsx'.format(filer), index = False)
+
+
+if __name__ == '__main__':
+    main()
